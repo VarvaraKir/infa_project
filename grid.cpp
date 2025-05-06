@@ -1,4 +1,4 @@
-#include "cell.cpp"
+#include "Cell.cpp"
 class grid
 {
 private:
@@ -9,7 +9,7 @@ private:
     int sum_line;
     double D;
     double ro; // плотность
-    cell **a;  // Должен быть не инт, а класс клетки cell
+    Cell **a;  // Должен быть не инт, а класс клетки Cell
 public:
     grid(int sum_column, int sum_line, double D, double dx, double dt, double ro)
     {
@@ -19,9 +19,9 @@ public:
         this->dx = dx;
         this->dt = dt;
         this->ro = ro;
-        this->a = new cell *[this->sum_column];
+        this->a = new Cell *[this->sum_column];
         for (int i = 0; i < this->sum_column; i++)
-            this->a[i] = new cell[this->sum_line];
+            this->a[i] = new Cell[this->sum_line];
     }
     ~grid()
     {
@@ -44,10 +44,10 @@ public:
     // }
     void diffusion(int column, int line) // Диффузия
     {
-        double C = this->a[column][line].get_C(); // Функция должна получать значение концентрации в клетке
-        double dC = this->a[column + 1][line].get_C() + this->a[column - 1][line].get_C() + this->a[column][line + 1].get_C() + this->a[column][line - 1].get_C();
+        double C = this->a[column][line].getC(); // Функция должна получать значение концентрации в клетке
+        double dC = this->a[column + 1][line].getC() + this->a[column - 1][line].getC() + this->a[column][line + 1].getC() + this->a[column][line - 1].getC();
         double C_new = C + this->D * this->dt / this->dx / this->dx * (dC - 4 * C);
-        this->a[column][line].set_C(C_new); // Функция должна задавать значение концентрации в клетке
+        this->a[column][line].setC(C_new); // Функция должна задавать значение концентрации в клетке
     }
     double square_summ(int i, int column, int line)
     {
@@ -58,8 +58,8 @@ public:
         {
             for (int k = 0; k < n; k++)
             {
-                if (this->a[column - i + num_column][line + i + num_line].solution() == true) // Проверяет, что это раствор
-                    summ += this->a[column - i + num_column][line + i + num_line].get_C();
+                if (this->a[column - i + num_column][line + i + num_line].isNotCrystallized() == true) // Проверяет, что это раствор
+                    summ += this->a[column - i + num_column][line + i + num_line].getC();
                 ++num_line;
             }
             num_line = 0;
@@ -69,7 +69,7 @@ public:
     }
     void crystallization(int column, int line) // Перераспределение при кристаллизации
     {
-        double Cn = this->ro - this->a[column][line].get_C();
+        double Cn = this->ro - this->a[column][line].getC();
         bool flag = false;
         int i = 0;
         while (flag == false)
@@ -83,8 +83,8 @@ public:
         {
             for (int k = 0; k < 2 * i - 1; k++)
             {
-                if (this->a[column - i + 1 + num_column][line + i - 1 + num_line].solution() == true)
-                    this->a[column - i + 1 + num_column][line + i - 1 + num_line].set_C(0);
+                if (this->a[column - i + 1 + num_column][line + i - 1 + num_line].isNotCrystallized() == true)
+                    this->a[column - i + 1 + num_column][line + i - 1 + num_line].setC(0);
                 ++num_line;
             }
             num_line = 0;
@@ -93,40 +93,40 @@ public:
         double factor = (Cn - square_summ(i - 1, column, line)) / (square_summ(i, column, line) - square_summ(i - 1, column, line));
         for (int j = 0; j < 2 * i + 1; j++)
         {
-            if (this->a[j][0].solution() == true)
+            if (this->a[j][0].isNotCrystallized() == true)
             {
-                double Ci = factor * this->a[j][0].get_C();
-                this->a[j][0].set_C(Ci);
+                double Ci = factor * this->a[j][0].getC();
+                this->a[j][0].setC(Ci);
             }
         }
         for (int j = 0; j < 2 * i + 1; j++)
         {
-            if (this->a[j][2 * i + 1].solution() == true)
+            if (this->a[j][2 * i + 1].isNotCrystallized() == true)
             {
-                double Ci = factor * this->a[j][2 * i + 1].get_C();
-                this->a[j][2 * i + 1].set_C(Ci);
+                double Ci = factor * this->a[j][2 * i + 1].getC();
+                this->a[j][2 * i + 1].setC(Ci);
             }
         }
         for (int j = 1; j < 2 * i; j++)
         {
-            if (this->a[0][j].solution() == true)
+            if (this->a[0][j].isNotCrystallized() == true)
             {
-                double Ci = factor * this->a[0][j].get_C();
-                this->a[0][j].set_C(Ci);
+                double Ci = factor * this->a[0][j].getC();
+                this->a[0][j].setC(Ci);
             }
-            if (this->a[2 * i + 1][j].solution() == true)
+            if (this->a[2 * i + 1][j].isNotCrystallized() == true)
             {
-                double Ci = factor * this->a[2 * i + 1][j].get_C();
-                this->a[2 * i + 1][j].set_C(Ci);
+                double Ci = factor * this->a[2 * i + 1][j].getC();
+                this->a[2 * i + 1][j].setC(Ci);
             }
         }
     }
-    void grid_set_C(int column, int line, double C)
+    void grid_setC(int column, int line, double C)
     {
-        this->a[column][line].set_C(C);
+        this->a[column][line].setC(C);
     }
-    double grid_get_C(int column, int line)
+    double grid_getC(int column, int line)
     {
-        return this->a[column][line].get_C();
+        return this->a[column][line].getC();
     }
 };
