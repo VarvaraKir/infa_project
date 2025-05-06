@@ -1,11 +1,17 @@
 #include "Cell.hpp"
-using namespace std;
 
 // Конструктор
 Cell::Cell(double c, double d)
 {
     this->C = c;
     this->D = d;
+}
+
+// Конструктор 2
+Cell::Cell()
+{
+    this->C = 0;
+    // cout << "Ha, Ha" << endl;
 }
 
 // Деструктор
@@ -41,38 +47,13 @@ bool Cell::isNotCrystallized() const
     double V = this->V0 * (this->Cv / this->C0) * (this->rho - this->C0) / (this->rho - this->Cv);
     double p = 1 - exp(-V * dt / dx);
 
-    return randomMy(0, 1) < p; // true = раствор (не кристаллизовался), false = кристаллизация
+    return random(0, 1) < p; // true = раствор (не кристаллизовался), false = кристаллизация
 }
 
-double Cell::randomMy(double min, double max) const
+double Cell::random(double min, double max) const
 {
     unsigned seed = std::chrono::steady_clock::now().time_since_epoch().count();
     static std::default_random_engine e(seed);
     std::uniform_real_distribution<double> d(min, max);
     return d(e);
 }
-
-// class CrystalSystem : public Cell
-// {
-// public:
-//     // Инициализация генератора случайных чисел
-//     CrystalSystem()
-//     {
-//         srand(time(0)); // для rand()
-//     }
-
-//     // Расчет вероятности кристаллизации
-//     double Prob_Crystal(double V, double dt, double dx)
-//     {
-//         P = 1.0 - exp(-V * dt / dx); // не знаю нужен - в формуле или нет
-//         P = clamp(P, 0.01, 0.99);    // Ограничиваем вероятность диапазоном [0.01, 0.99]
-//         return P;
-//     }
-
-//     // Проверка состояния вещества
-//     bool IsSolution()
-//     {
-//         double random_value = (double)rand() / RAND_MAX;
-//         return (random_value >= P); // true = раствор (не кристаллизовался), false = кристаллизация
-//     }
-// };

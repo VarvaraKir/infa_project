@@ -1,5 +1,4 @@
 #include "Grid.hpp"
-using namespace std;
 
 Grid::Grid(int sum_column, int sum_line, double D, double dx, double dt, double ro)
 {
@@ -9,16 +8,16 @@ Grid::Grid(int sum_column, int sum_line, double D, double dx, double dt, double 
     this->dx = dx;
     this->dt = dt;
     this->ro = ro;
-    this->a = new Cell *[this->sum_column];
-    for (int i = 0; i < this->sum_column; i++)
-        this->a[i] = new Cell[this->sum_line];
+    this->a = vector<vector<Cell>>(sum_line, vector<Cell>(sum_column));
+    for (int i = 0; i < this->sum_line; ++i)
+    {
+        for (int j = 0; j < this->sum_column; ++j)
+        {
+            this->a[i][j] = Cell();
+        }
+    }
 }
-Grid::~Grid()
-{
-    for (int i = 0; i < this->sum_column; i++)
-        delete[] this->a[i];
-    delete[] this->a;
-}
+Grid::~Grid() {}
 // void print()
 // {
 //     for(int i=0; i<this->sum_line; ++i)

@@ -4,6 +4,7 @@
 #include <cmath>
 #include <algorithm>
 #include <chrono>
+using namespace std;
 
 class Cell
 {
@@ -19,6 +20,10 @@ class Cell
 public:
     // Конструктор
     Cell(double c, double d);
+
+    // конструктор2
+    Cell();
+
     // Деструктор
     ~Cell();
 
@@ -31,33 +36,11 @@ public:
     // Получение вероятности растворения
     double probabilityOfDissolution(double W, double dt, double dx);
 
-    // Получение скорости роста
-    void growthRate();
-
     // Получение скорости растворения
     void dissolutionRate();
 
     // Проверка кристаллизованности
     bool isNotCrystallized() const;
 
-    double randomMy(double min, double max) const;
+    double random(double min, double max) const;
 };
-
-// class CrystalSystem : public Cell
-// {
-// public:
-//     // Инициализация генератора случайных чисел
-//     CrystalSystem()
-//     {
-//     }
-
-//     // Расчет вероятности кристаллизации
-//     double Prob_Crystal(double V, double dt, double dx)
-//     {
-//     }
-
-//     // Проверка состояния вещества
-//     bool IsSolution()
-//     {
-//     }
-// };

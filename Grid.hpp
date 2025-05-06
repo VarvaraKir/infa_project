@@ -2,17 +2,19 @@
 #include <cmath>
 #include <algorithm>
 #include <chrono>
+#include <vector>
 #include "Cell.hpp"
+using namespace std;
 
 class Grid
 {
-    double dt;      // Шаг по времени
-    double dx;      // Шаг по пространству
-    int sum_column; // Количество столбцов
-    int sum_line;   // Количество строк
-    double D;       // Коэффициент диффузии
-    double ro;      // Плотность
-    Cell **a;       // Двумерный массив клеток
+    double dt;              // Шаг по времени
+    double dx;              // Шаг по пространству
+    int sum_column;         // Количество столбцов
+    int sum_line;           // Количество строк
+    double D;               // Коэффициент диффузии
+    double ro;              // Плотность
+    vector<vector<Cell>> a; // Двумерный вектор клеток (матрица)
 
 public:
     // Конструктор и деструктор
@@ -30,5 +32,5 @@ public:
 
     // Вспомогательные методы
     double square_summ(int i, int column, int line);
-    //  bool Grid_isSolution(int column, int line); // Проверка состояния клетки
+    // bool Grid_isSolution(int column, int line); // Проверка состояния клетки
 };
