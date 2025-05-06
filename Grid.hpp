@@ -1,0 +1,34 @@
+#include <iostream>
+#include <cmath>
+#include <algorithm>
+#include <chrono>
+#include "Cell.hpp"
+
+class Grid
+{
+    double dt;      // Шаг по времени
+    double dx;      // Шаг по пространству
+    int sum_column; // Количество столбцов
+    int sum_line;   // Количество строк
+    double D;       // Коэффициент диффузии
+    double ro;      // Плотность
+    Cell **a;       // Двумерный массив клеток
+
+public:
+    // Конструктор и деструктор
+    Grid(int sum_column, int sum_line, double D, double dx, double dt, double ro);
+
+    ~Grid();
+
+    // Методы для работы с концентрацией
+    void Grid_setC(int column, int line, double C);
+    double Grid_getC(int column, int line);
+
+    // Физические процессы
+    void diffusion(int column, int line);
+    void crystallization(int column, int line);
+
+    // Вспомогательные методы
+    double square_summ(int i, int column, int line);
+    //  bool Grid_isSolution(int column, int line); // Проверка состояния клетки
+};

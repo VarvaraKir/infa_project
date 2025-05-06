@@ -41,10 +41,10 @@ bool Cell::isNotCrystallized() const
     double V = this->V0 * (this->Cv / this->C0) * (this->rho - this->C0) / (this->rho - this->Cv);
     double p = 1 - exp(-V * dt / dx);
 
-    return random(0, 1) < p; // true = раствор (не кристаллизовался), false = кристаллизация
+    return randomMy(0, 1) < p; // true = раствор (не кристаллизовался), false = кристаллизация
 }
 
-double random(double min, double max)
+double Cell::randomMy(double min, double max) const
 {
     unsigned seed = std::chrono::steady_clock::now().time_since_epoch().count();
     static std::default_random_engine e(seed);

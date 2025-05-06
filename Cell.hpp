@@ -39,6 +39,8 @@ public:
 
     // Проверка кристаллизованности
     bool isNotCrystallized() const;
+
+    double randomMy(double min, double max) const;
 };
 
 // class CrystalSystem : public Cell
