@@ -10,7 +10,7 @@ class Cell
 {
 
     // Вводим сами
-    double C, Cv, C0, V0, D, rho, dt, dx; // концентрация, концентрация вещества в растворе,
+    double C, C0, V0, D, rho, dt, dx; // концентрация, концентрация вещества в растворе,
                                           // равновесная концентрация, скорость роста кристалла, Коэфф диффузии,
                                           // плотность твердого вещества (для кристаллизации), шаг по времени и по расстоянию
     // Считаем в процессе
@@ -63,6 +63,10 @@ Cell::Cell()
 {
     this->C = 0;
     this->solution = true;
+    this->V0 = 0.65;
+    this->C0 = 0.7;
+    this->dt = 0.05;
+    this->dx = 0.05;
     // cout << "Ha, Ha" << endl;
 }
 
@@ -97,8 +101,16 @@ double Cell::probabilityOfcrystallization(double dt, double dx)
 // Получение скорости растворения
 void Cell::dissolutionRate()
 {
-    this->W = this->V0 * (this->C0 / this->Cv) * (this->rho - this->Cv) / (this->rho - this->C0);
-    this->V = this->V0 *(this->Cv / this->C0) * (this->rho - this->C0) / (this->rho - this->Cv);
+    if (this->C != this->rho)
+    {
+        this->W = this->V0 * (this->C0 / this->C) * (this->rho - this->C) / (this->rho - this->C0);
+        this->V = this->V0 *(this->C / this->C0) * (this->rho - this->C0) / (this->rho - this->C);
+    }
+    else
+    {
+        this->W = 0;
+        this->V = 99999;
+    }
 }
 
 // bool Cell::isNotCrystallized() const

@@ -1,11 +1,12 @@
 #include "grid.cpp"
 int main()
 {
-    grid data(11, 11, 2.5, 0.01, 0.01, 12.3);
-    grid data1(11, 11, 2.5, 0.01, 0.01, 12.3);
+    grid data(99, 99, 0.01, 0.05, 0.05, 1.4);
+    grid data1(99, 99, 0.01, 0.05, 0.05, 1.4);
     int t;
     double C;
     cin>>t;
+    // data.print();
     for (int k =0; k<t; k++)
     {
         for (int i=1; i<data.get_lines()-1; i++)
@@ -25,5 +26,6 @@ int main()
             }
         }
     }
+    data.print();
     return 0;
 }
