@@ -1,31 +1,37 @@
-#include "grid.cpp"
+#include "Grid.hpp"
+#include "Visualizer.hpp"
+
+#include <iostream>
+#include <vector>
+
 int main()
 {
-    grid data(99, 99, 0.01, 0.05, 0.05, 1.4);
-    grid data1(99, 99, 0.01, 0.05, 0.05, 1.4);
-    int t;
-    double C;
-    cin>>t;
-    // data.print();
-    for (int k =0; k<t; k++)
+    int lines = 100;
+    int columns = 100;
+
+    int t = 100;
+    std::vector<Grid> data;
+    data.push_back(Grid(lines, columns, 0.01, 0.01, 0.05, 1.4));
+
+    for (unsigned k = 1; k <= t; k++)
     {
-        for (int i=1; i<data.get_lines()-1; i++)
+        data.push_back(Grid(lines, columns, 0.01, 0.05, 0.05, 1.4));
+
+        for (unsigned i = 1; i < lines - 1; i++)
         {
-            for(int j=1; j<data.get_columns()-1; j++)
+            for (unsigned j = 1; j < columns - 1; j++)
             {
-                C = data.diffusion(i, j);
-                data1.grid_set_C(i, j , C);
+                data[k].grid_set_crystallized(i, j, data[k - 1].grid_get_crystallized(i, j));
+                data[k].grid_set_C(i, j, data[k - 1].diffusion(i, j));
             }
         }
-        data = data1;
-        for (int i=1; i<data.get_lines()-1; i++)
-        {
-            for(int j=1; j<data.get_columns()-1; j++)
-            {
-                data.random_crystallization(i, j);
-            }
-        }
+
+        data[k].diffuse(); // Запихать кусок кода выше в этот метод?
+        data[k].dissolve();
+        data[k].crystallize();
     }
-    data.print();
+
+    Visualizer visualizer(data);
+
     return 0;
 }

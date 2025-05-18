@@ -1,72 +1,14 @@
-#include <iostream>
-#include <random>
-#include <cstdlib>
-#include <cmath>
-#include <algorithm>
-#include <chrono>
-using namespace std;
-
-class Cell
-{
-
-    // Вводим сами
-    double C, C0, V0, D, rho, dt, dx; // концентрация, концентрация вещества в растворе,
-                                          // равновесная концентрация, скорость роста кристалла, Коэфф диффузии,
-                                          // плотность твердого вещества (для кристаллизации), шаг по времени и по расстоянию
-    // Считаем в процессе
-    double V, W, P, Q; // средняя скорость роста, средняя скорость растворения грани кристалла,
-                       // вероятность кристализации, вероятность растворения
-    bool solution;
-
-public:
-    // Конструктор
-    Cell(double c, double d);
-
-    // конструктор2
-    Cell();
-
-    // Деструктор
-    ~Cell();
-
-    // Задаем концентрацию
-    void setC(double c);
-
-    // Возвращение концентрации
-    double getC() const;
-
-    // Получение вероятности растворения
-    double probabilityOfDissolution(double dt, double dx);
-
-    // Получение вероятности кристаллизации
-    double probabilityOfcrystallization(double dt, double dx);
-
-    // Получение скорости растворения
-    void dissolutionRate();
-
-    // // Проверка кристаллизованности
-    // bool isNotCrystallized() const;
-
-    // double random(double min, double max) const;
-    bool get_solution();
-    void set_crystal();
-};
+#include "Cell.hpp"
 
 // Конструктор
-Cell::Cell(double c, double d)
-{
-    this->C = c;
-    this->D = d;
-}
-
-// Конструктор 2
 Cell::Cell()
 {
-    this->C = 0;
-    this->solution = true;
-    this->V0 = 0.65;
-    this->C0 = 0.7;
-    this->dt = 0.05;
-    this->dx = 0.05;
+    C = 0;
+    crystallized = false;
+    V0 = 1;
+    C0 = 1.4;
+    dt = 0.01;
+    dx = 0.05;
     // cout << "Ha, Ha" << endl;
 }
 
@@ -74,64 +16,44 @@ Cell::Cell()
 Cell::~Cell() {}
 
 // Задаем концентрацию
-void Cell::setC(double c)
+void Cell::setC(double С)
 {
-    this->C = c;
+    this->C = С;
 }
 
 // Возвращение концентрации
 double Cell::getC() const
 {
-    return this->C;
+    return C;
 }
 
 // Получение вероятности растворения
-double Cell::probabilityOfDissolution(double dt, double dx)
+double Cell::probability_of_dissolution(double dt, double dx)
 {
-    dissolutionRate();
-    this->Q = 1 - exp(-1*this->W * dt / dx);
-    return Q;
+    dissolution_rate();
+    return 1 - exp(-W * dt / dx);
 }
-double Cell::probabilityOfcrystallization(double dt, double dx)
+
+double Cell::probability_of_crystallization(double dt, double dx)
 {
-    dissolutionRate();
-    this->Q = 1 - exp(-1*this->V * dt / dx);
-    return Q;
+    dissolution_rate();
+    return 1 - exp(-V * dt / dx);
 }
+
 // Получение скорости растворения
-void Cell::dissolutionRate()
+void Cell::dissolution_rate()
 {
-    if (this->C != this->rho)
-    {
-        this->W = this->V0 * (this->C0 / this->C) * (this->rho - this->C) / (this->rho - this->C0);
-        this->V = this->V0 *(this->C / this->C0) * (this->rho - this->C0) / (this->rho - this->C);
-    }
-    else
-    {
-        this->W = 0;
-        this->V = 99999;
-    }
+    double k = (C / C0) * (rho - C0) / (rho - C);
+    V = V0 * k;
+    W = V0 / k;
 }
 
-// bool Cell::isNotCrystallized() const
-// {
-//     double V = this->V0 * (this->Cv / this->C0) * (this->rho - this->C0) / (this->rho - this->Cv);
-//     double p = 1 - exp(-V * dt / dx);
+bool Cell::get_crystallized() const
+{
+    return crystallized;
+}
 
-//     return random(0, 1) < p; // true = раствор (не кристаллизовался), false = кристаллизация
-// }
-bool Cell::get_solution()
+void Cell::set_crystallized(bool is_crystallized)
 {
-    return this->solution;
-}
-void Cell::set_crystal()
-{
-    this->solution = false;
-}
-double random(double min, double max)
-{
-    unsigned seed = std::chrono::steady_clock::now().time_since_epoch().count();
-    static std::default_random_engine e(seed);
-    std::uniform_real_distribution<double> d(min, max);
-    return d(e);
+    crystallized = is_crystallized;
 }
