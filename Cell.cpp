@@ -5,9 +5,9 @@ Cell::Cell()
 {
     C = 0;
     crystallized = false;
-    V0 = 1;
-    C0 = 1.4;
-    dt = 0.01;
+    V0 = 0.4;
+    C0 = 0.7;
+    dt = 0.05;
     dx = 0.05;
     // cout << "Ha, Ha" << endl;
 }

@@ -22,7 +22,6 @@ public:
 
     ~Grid();
 
-    void diffuse();
 
     double diffusion(int line, int column); // Диффузия
 

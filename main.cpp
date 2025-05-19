@@ -9,9 +9,9 @@ int main()
     int lines = 100;
     int columns = 100;
 
-    int t = 100;
+    int t = 60;
     std::vector<Grid> data;
-    data.push_back(Grid(lines, columns, 0.01, 0.01, 0.05, 1.4));
+    data.push_back(Grid(lines, columns, 0.01, 0.05, 0.05, 1.4));
 
     for (unsigned k = 1; k <= t; k++)
     {
@@ -26,7 +26,6 @@ int main()
             }
         }
 
-        data[k].diffuse(); // Запихать кусок кода выше в этот метод?
         data[k].dissolve();
         data[k].crystallize();
     }

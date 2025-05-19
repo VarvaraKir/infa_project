@@ -54,7 +54,7 @@ void Visualizer::draw(const Grid &grid)
             }
             else
             {
-                tiles[i][j].setFillColor(sf::Color(state, state, state));
+                tiles[i][j].setFillColor(sf::Color(state)); //, state, state));
             }
 
             window.draw(tiles[i][j]);
