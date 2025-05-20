@@ -1,9 +1,12 @@
 #include "grid.cpp"
+#include "Visualizer.cpp"
 int main()
 {
     grid data(99, 99, 0.01, 0.05, 0.05, 1.4);
     grid data1(99, 99, 0.01, 0.05, 0.05, 1.4);
     int t;
+    vector<grid> data_t(t+1);
+    data_t.push_back(data);
     double C;
     cin>>t;
     // data.print();
@@ -25,6 +28,7 @@ int main()
                 data.random_crystallization(i, j);
             }
         }
+        data_t.push_back(data);
     }
     data.print();
     return 0;
