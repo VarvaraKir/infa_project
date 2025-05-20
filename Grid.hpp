@@ -1,36 +1,54 @@
-#include <iostream>
-#include <cmath>
-#include <algorithm>
-#include <chrono>
-#include <vector>
-#include "Cell.hpp"
-using namespace std;
+#pragma once
 
-class grid
+#include <vector>
+#include <algorithm>
+
+#include "Cell.hpp"
+
+class Grid
 {
-    double dt;              // Шаг по времени
-    double dx;              // Шаг по пространству
-    int sum_column;         // Количество столбцов
-    int sum_line;           // Количество строк
-    double D;               // Коэффициент диффузии
-    double ro;              // Плотность
-    vector<vector<Cell>> a; // Двумерный вектор клеток (матрица)
+private:
+    double dt;
+    double dy;
+    double dx;
+    unsigned sum_column;
+    unsigned sum_line;
+    double D;
+    double rho; // плотность
+    std::vector<std::vector<Cell>> a;
 
 public:
-    // Конструктор и деструктор
-    grid(int sum_column, int sum_line, double D, double dx, double dt, double ro);
+    Grid(int sum_column, int sum_line, double D, double dx, double dt);
 
-    ~grid();
+    ~Grid();
 
-    // Методы для работы с концентрацией
-    void grid_set_C(int column, int line, double C);
-    double grid_get_C(int column, int line);
 
-    // Физические процессы
-    void diffusion(int column, int line);
-    void crystallization(int column, int line);
+    double diffusion(int line, int column); // Диффузия
 
-    // Вспомогательные методы
-    double square_summ(int i, int column, int line);
-    // bool Grid_isSolution(int column, int line); // Проверка состояния клетки
+    void dissolve();
+
+    void crystallize();
+
+    bool has_crystal_neighbour(unsigned i, unsigned j) const;
+
+    void crystallization(int line, int column); // Перераспределение при кристаллизации
+
+    double square_summ(int i, unsigned line, unsigned column) const;
+
+    double grid_get_C(unsigned line, unsigned column) const;
+
+    void grid_set_C(unsigned line, unsigned column, double C);
+
+    bool grid_get_crystallized(unsigned line, unsigned column) const;
+
+    void grid_set_crystallized(unsigned line, unsigned column, bool is_crystallized);
+
+    int get_lines() const;
+
+    int get_columns() const;
+
+    int get_state(int line, int column) const;
+
+    double random_double(double min, double max);
+    Grid& operator= (Grid& b);
 };

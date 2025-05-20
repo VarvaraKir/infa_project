@@ -1,15 +1,23 @@
-#include "grid.cpp"
-#include "Visualizer.cpp"
+#include "Grid.hpp"
+#include "Visualizer.hpp"
+
+#include <iostream>
+#include <vector>
 int main()
 {
-    grid data(99, 99, 0.01, 0.05, 0.05, 1.4);
-    grid data1(99, 99, 0.01, 0.05, 0.05, 1.4);
-    int t;
-    vector<grid> data_t(t+1);
+    int lines = 100;
+    int columns = 100;
+
+    int t = 80;
+    double D = 0.01;
+    double dt = 0.05;
+    double dx = dt;
+    double rho = 1.4;
+    std::vector<Grid> data_t;
+    Grid data(lines, columns, D, dx, dt);
+    Grid data1(lines, columns, D, dx, dt);
     data_t.push_back(data);
     double C;
-    cin>>t;
-    // data.print();
     for (int k =0; k<t; k++)
     {
         for (int i=1; i<data.get_lines()-1; i++)
@@ -21,15 +29,9 @@ int main()
             }
         }
         data = data1;
-        for (int i=1; i<data.get_lines()-1; i++)
-        {
-            for(int j=1; j<data.get_columns()-1; j++)
-            {
-                data.random_crystallization(i, j);
-            }
-        }
+        data.crystallize();
         data_t.push_back(data);
     }
-    data.print();
+    Visualizer visualizer(data_t);
     return 0;
 }
